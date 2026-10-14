@@ -48,3 +48,6 @@ Notes:
     - Podeu tenir múltiples galeries actives simultàniament
     - Les operacions d'afegir/eliminar són ràpides (no busquen a la llista)
 """
+
+
+print("oi")
