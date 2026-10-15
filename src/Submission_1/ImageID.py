@@ -42,6 +42,7 @@ class ImageID:
 
     def generate_uuid(self, file: str) -> str:
         # Creem el UUID amb la funció obligatòria de l'enunciat
+        file = str(file)
         new_uuid = str(cfg.get_uuid(file))
         
         # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file
@@ -57,14 +58,10 @@ class ImageID:
 
     def get_uuid(self, file: str) -> str:
         # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
-        return self.file_to_uuid.get(file)
+        return self.file_to_uuid.get(str(file))
 
     def remove_uuid(self, uuid: str) -> None:
-        if not self.uuid_to_file:
-            return
-
-        if uuid not in self.uuid_to_file:
-            return
-
-        file = self.uuid_to_file.pop(uuid)
-        self.file_to_uuid.pop(file, None)
+        uuid = str(uuid)                      # evita objectes no-hashables 
+        file = self.uuid_to_file.pop(uuid, None)
+        if file is not None:
+            self.file_to_uuid.pop(file, None)
