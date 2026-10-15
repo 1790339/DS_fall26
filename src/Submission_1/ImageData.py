@@ -59,6 +59,7 @@ Notes:
 """
 import os
 import cfg as cfg
+from PIL import Image
 
 class ImageData:
     def __init__(self):
@@ -79,7 +80,8 @@ class ImageData:
             'sampler': 'None',
             'model': 'None',
             'generated': 'None',
-            'created_date': 'None'
+            'created_date': 'None',
+            'dimensions': 'None'
         }
 
     def remove_image(self, uuid: str):
@@ -104,8 +106,7 @@ class ImageData:
 
         try:
             # Utilitzem la funció proporcionada per l'assignatura per llegir els chunks del PNG
-            metadata = cfg.read_png_metadata(abs_file)
-            
+            metadata = Image.open(abs_file)
             if metadata:
                 # Actualitzem el diccionari intern. 
                 # Fem servir .get() per mantenir "None" si la imatge no té algun camp
