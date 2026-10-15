@@ -44,7 +44,7 @@ Notes:
     - Gestioneu les excepcions si la imatge no es pot mostrar
     - El format de sortida ha de ser llegible i ben organitzat
 """
-import cfg
+import Submission_1.cfg as cfg
 import os
 from PIL import Image
 

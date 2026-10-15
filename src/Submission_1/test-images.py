@@ -3,7 +3,7 @@
 test-images.py : Script de proves per visualitzar imatges generades amb IA
 """
 
-import cfg      # Necessari per a la pràctica !!
+import Submission_1.cfg as cfg      # Necessari per a la pràctica !!
                 # Mireu el contingut de l'arxiu
 
 import os.path

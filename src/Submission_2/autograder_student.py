@@ -265,7 +265,7 @@ def run_phase1_tests():
         image_data = None
         try:
             # Import cfg to use read_png_metadata
-            import cfg
+            import Submission_1.cfg as cfg
 
             image_data = ImageData()
             image_id = ImageID()  # Use ImageID to properly generate UUIDs
