@@ -47,7 +47,7 @@ class ImageID:
         # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file
         if new_uuid in self.uuid_to_file:
             print(f"AVÍS: L'ID {new_uuid} del fitxer '{file}' ja existeix. S'ignora.")
-            return ""
+            return None
             
         # Guardem la relació en els dos sentits per mantenir-ho sincronitzat
         self.file_to_uuid[file] = new_uuid
@@ -57,7 +57,7 @@ class ImageID:
 
     def get_uuid(self, file: str) -> str:
         # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
-        return self.file_to_uuid.get(file, "")
+        return self.file_to_uuid.get(file)
 
     def remove_uuid(self, uuid: str):
         # Esborrem la informació d'ambdues bandes per no deixar dades orfes
