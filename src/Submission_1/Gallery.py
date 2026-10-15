@@ -66,33 +66,39 @@ class Gallery:
         # Substituïm la llista estàndard per una cua de doble final (Doubly Linked List)
         self.image_uuids = deque()
 
-    def load_file(self, file: str):
-        if not os.path.isfile(file):
-            print(f"Error: No s'ha trobat l'arxiu '{file}'.")
-            return
+    
+def load_file(self, file: str):
+    if not os.path.isfile(file):
+        print(f"Error: No s'ha trobat l'arxiu '{file}'.")
+        return
 
-        try:
-            with open(file, 'r', encoding='utf-8') as f:
-                dades = json.load(f)
-                
-            self.gallery_name = dades.get("gallery_name", "Desconeguda")
-            self.description = dades.get("description", "Sense descripció")
-            self.created_date = dades.get("created_date", "Desconeguda")
-            
-            # Buidem la cua ràpidament
-            self.image_uuids.clear()
-            
-            imatges_json = dades.get("images", [])
-            for path_imatge in imatges_json:
-                uuid = self.gestor_ids.get_uuid(path_imatge)
-                if uuid != "":
-                    # append actua sobre l'extrem dret (O(1))
-                    self.image_uuids.append(uuid)
-                else:
-                    print(f"AVÍS: La imatge '{path_imatge}' no existeix.")
-                    
-        except Exception as e:
-            print(f"Error parsejant el fitxer JSON: {e}")
+    try:
+        with open(file, "r", encoding="utf-8") as f:
+            dades = json.load(f)
+
+        self.gallery_name = dades.get("gallery_name", "Desconeguda")
+        self.description = dades.get("description", "Sense descripció")
+        self.created_date = dades.get("created_date", "Desconeguda")
+
+        self.image_uuids.clear()
+
+        for path_imatge in dades.get("images", []):
+            path_imatge = os.path.normpath(path_imatge)
+            path_imatge = path_imatge.replace(os.sep, "/")
+
+            uuid = self.gestor_ids.get_uuid(path_imatge)
+
+            if uuid is not None:
+                self.image_uuids.append(uuid)
+            else:
+                print(
+                    f"AVÍS: La imatge '{path_imatge}' "
+                    "no existeix a la col·lecció."
+                )
+
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"Error llegint el fitxer JSON: {e}")
+
 
     def show(self):
         if not self.image_uuids:
