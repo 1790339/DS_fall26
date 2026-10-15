@@ -31,7 +31,7 @@ Notes:
     - Els UUID s'emmagatzemen com a strings
     - Un UUID només es pot generar una vegada (fins que s'elimini)
 """
-import Submission_1.cfg as cfg
+import cfg as cfg
 
 class ImageID:
     def __init__(self):

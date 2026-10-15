@@ -51,7 +51,7 @@ Notes:
 
 import json
 import os
-import Submission_1.cfg as cfg
+import cfg as cfg
 from collections import deque
 
 class Gallery:

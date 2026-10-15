@@ -58,7 +58,7 @@ Notes:
     - Tots els camps de metadades es guarden com a strings
 """
 import os
-import cfg
+import cfg as cfg
 
 class ImageData:
     def __init__(self):
