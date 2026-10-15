@@ -31,3 +31,36 @@ Notes:
     - Els UUID s'emmagatzemen com a strings
     - Un UUID només es pot generar una vegada (fins que s'elimini)
 """
+import cfg
+
+class ImageID:
+    def __init__(self):
+        # Dos diccionaris (taules hash) per garantir cerques O(1) en ambdues direccions.
+        # file_to_uuid busca per path. uuid_to_file busca per UUID (claus i valors invertits).
+        self.file_to_uuid = {}
+        self.uuid_to_file = {}
+
+    def generate_uuid(self, file: str) -> str:
+        # Creem el UUID amb la funció obligatòria de l'enunciat
+        new_uuid = str(cfg.get_uuid(file))
+        
+        # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file
+        if new_uuid in self.uuid_to_file:
+            print(f"AVÍS: L'ID {new_uuid} del fitxer '{file}' ja existeix. S'ignora.")
+            return ""
+            
+        # Guardem la relació en els dos sentits per mantenir-ho sincronitzat
+        self.file_to_uuid[file] = new_uuid
+        self.uuid_to_file[new_uuid] = file
+        
+        return new_uuid
+
+    def get_uuid(self, file: str) -> str:
+        # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
+        return self.file_to_uuid.get(file, "")
+
+    def remove_uuid(self, uuid: str):
+        # Esborrem la informació d'ambdues bandes per no deixar dades orfes
+        if uuid in self.uuid_to_file:
+            file = self.uuid_to_file.pop(uuid)
+            self.file_to_uuid.pop(file, None)
