@@ -44,3 +44,62 @@ Notes:
     - Gestioneu les excepcions si la imatge no es pot mostrar
     - El format de sortida ha de ser llegible i ben organitzat
 """
+import cfg
+import os
+from PIL import Image
+
+class ImageViewer:
+    def __init__(self, gestor_ids, gestor_dades):
+        # Guardem les referències als gestors per poder consultar
+        # les rutes i les metadades directament des de la memòria.
+        self.gestor_ids = gestor_ids
+        self.gestor_dades = gestor_dades
+
+    def print_image(self, uuid: str):
+        # Comprovem si les dades encara estan buides avaluant un camp clau
+        if self.gestor_dades.get_prompt(uuid) == None:
+            self.gestor_dades.load_metadata(uuid)
+            
+        print(f"\n--- Metadades de la imatge ---")
+        print(f" UUID:      {uuid}")
+        print(f" Prompt:    {self.gestor_dades.get_prompt(uuid)[:90]}...")
+        print(f" Model:     {self.gestor_dades.get_model(uuid)}")
+        print(f" CFG Scale: {self.gestor_dades.get_cfg_scale(uuid)}")
+        print(f" Steps:     {self.gestor_dades.get_steps(uuid)}")
+        print(f" Seed:      {self.gestor_dades.get_seed(uuid)}")
+        print(f" Sampler:   {self.gestor_dades.get_sampler(uuid)}")
+        print(f" Generated: {self.gestor_dades.get_generated(uuid)}")
+        print(f" Data:      {self.gestor_dades.get_created_date(uuid)}")
+        print("-" * 30)
+
+    def show_file(self, file: str):
+        # Obtenim la ruta absoluta necessària per obrir l'arxiu físic
+        abs_file = os.path.join(cfg.get_root(), file)
+        
+        if not os.path.isfile(abs_file):
+            print(f"Error: L'arxiu {abs_file} no existeix al disc.")
+            return
+            
+        try:
+            img = Image.open(abs_file)
+            img.show()
+        except Exception as e:
+            print(f"Error en visualitzar la imatge: {e}")
+
+    def show_image(self, uuid: str, mode: int):
+        # Recuperem la ruta relativa a partir de l'UUID consultant el diccionari O(1)
+        file = self.gestor_ids.uuid_to_file.get(uuid)
+        
+        if not file:
+            print(f"Error: L'identificador {uuid} no està registrat al sistema.")
+            return
+
+        # mode 0: només metadades
+        # mode 1: metadades + imatge
+        # mode 2: només imatge
+        
+        if mode == 0 or mode == 1:
+            self.print_image(uuid)
+            
+        if mode == 1 or mode == 2:
+            self.show_file(file)
