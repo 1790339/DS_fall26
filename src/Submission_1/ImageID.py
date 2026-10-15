@@ -59,8 +59,12 @@ class ImageID:
         # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
         return self.file_to_uuid.get(file)
 
-    def remove_uuid(self, uuid: str):
-        # Esborrem la informació d'ambdues bandes per no deixar dades orfes
-        if uuid in self.uuid_to_file:
-            file = self.uuid_to_file.pop(uuid)
-            self.file_to_uuid.pop(file, None)
+    def remove_uuid(self, uuid: str) -> None:
+        if not self.uuid_to_file:
+            return
+
+        if uuid not in self.uuid_to_file:
+            return
+
+        file = self.uuid_to_file.pop(uuid)
+        self.file_to_uuid.pop(file, None)
