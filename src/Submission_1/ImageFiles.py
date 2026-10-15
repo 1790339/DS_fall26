@@ -27,3 +27,38 @@ Notes:
     - Només considereu arxius amb extensió .png (case-insensitive)
     - Heu de recórrer tots els subdirectoris recursivament
 """
+
+import os
+
+class ImageFiles:
+    def __init__(self):
+        # guardem l'estat en un set per fer diferencies rapides O(N)
+        self.current_files = set()
+        self.last_added = []
+        self.last_removed = []
+
+    def reload_fs(self, path: str):
+        new_files = set()
+        
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                if file.lower().endswith('.png'):
+                    full_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(full_path, path)
+                    
+                    # unifiquem separadors segons el guio
+                    rel_path = rel_path.replace(os.sep, '/')
+                    
+                    new_files.add(rel_path)
+        
+        # calculem els canvis respecte a l'ultima lectura
+        self.last_added = list(new_files - self.current_files)
+        self.last_removed = list(self.current_files - new_files)
+        
+        self.current_files = new_files
+
+    def files_added(self) -> list:
+        return self.last_added
+
+    def files_removed(self) -> list:
+        return self.last_removed
