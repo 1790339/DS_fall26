@@ -49,5 +49,86 @@ Notes:
     - Les operacions d'afegir/eliminar són ràpides (no busquen a la llista)
 """
 
+import json
+import os
+import cfg
+from collections import deque
 
-print("oi")
+class Gallery:
+    def __init__(self, gestor_ids, visualitzador):
+        self.gestor_ids = gestor_ids
+        self.visualitzador = visualitzador
+        
+        self.gallery_name = ""
+        self.description = ""
+        self.created_date = ""
+        
+        # Substituïm la llista estàndard per una cua de doble final (Doubly Linked List)
+        self.image_uuids = deque()
+
+    def load_file(self, file: str):
+        if not os.path.isfile(file):
+            print(f"Error: No s'ha trobat l'arxiu '{file}'.")
+            return
+
+        try:
+            with open(file, 'r', encoding='utf-8') as f:
+                dades = json.load(f)
+                
+            self.gallery_name = dades.get("gallery_name", "Desconeguda")
+            self.description = dades.get("description", "Sense descripció")
+            self.created_date = dades.get("created_date", "Desconeguda")
+            
+            # Buidem la cua ràpidament
+            self.image_uuids.clear()
+            
+            imatges_json = dades.get("images", [])
+            for path_imatge in imatges_json:
+                uuid = self.gestor_ids.get_uuid(path_imatge)
+                if uuid != "":
+                    # append actua sobre l'extrem dret (O(1))
+                    self.image_uuids.append(uuid)
+                else:
+                    print(f"AVÍS: La imatge '{path_imatge}' no existeix.")
+                    
+        except Exception as e:
+            print(f"Error parsejant el fitxer JSON: {e}")
+
+    def show(self):
+        if not self.image_uuids:
+            print("La galeria està buida o no s'ha carregat correctament.")
+            return
+
+        print(f"\n{'=' * 50}")
+        print(f" GALERIA: {self.gallery_name}")
+        print(f" Total imatges: {len(self.image_uuids)}")
+        print(f"{'=' * 50}")
+        
+        mode_actual = cfg.DISPLAY_MODE
+        
+        # Iterar seqüencialment per un deque continua sent eficient
+        for index, uuid in enumerate(self.image_uuids):
+            print(f"\n---> [Diapositiva {index + 1} de {len(self.image_uuids)}] <---")
+            self.visualitzador.show_image(uuid, mode_actual)
+
+    # --- FUNC 7: Modificació dinàmica optimitzada amb O(1) absolut ---
+
+    def add_image_at_end(self, uuid: str):
+        if uuid:
+            self.image_uuids.append(uuid) # Inserció per la cua: O(1)
+
+    def remove_first_image(self):
+        if len(self.image_uuids) > 0:
+            # popleft() extreu pel cap destruint l'enllaç sense moure memòria: O(1)
+            return self.image_uuids.popleft()
+        else:
+            print("AVÍS: La galeria ja està buida.")
+            return None
+
+    def remove_last_image(self):
+        if len(self.image_uuids) > 0:
+            # pop() extreu per la cua: O(1)
+            return self.image_uuids.pop()
+        else:
+            print("AVÍS: La galeria ja està buida.")
+            return None
