@@ -149,3 +149,6 @@ class ImageData:
 
     def get_created_date(self, uuid: str) -> str:
         return self.db.get(uuid, {}).get('created_date', 'None')
+
+    def get_dimensions(self, uuid: str) -> tuple:
+        return self.db.get(uuid, {}).get('dimensions', (0, 0))
