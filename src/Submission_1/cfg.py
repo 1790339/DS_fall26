@@ -19,7 +19,7 @@ import uuid
 
 # Selecció del vostre PATH amb les imatges generades
 #
-ROOT_DIR  = r"\\wsl.localhost\Ubuntu\home\david\Escritorio\universidad\GestorImatges\DS_fall26\generated_images"                                   # Github
+ROOT_DIR = "/home/david/Escritorio/universidad/GestorImatges/DS_fall26"                                 # Github
 #ROOT_DIR = r"E:\_UAB\ED\DS_fall25-main\generated_images"            # Windows
 #ROOT_DIR = r"/opt/_uab/ed/DS_fall25-main/generated_images"          # Linux
 #ROOT_DIR = r"/Users/usuari/_uab/ed/DS_fall25-main/generated_images" # MacOS
@@ -253,5 +253,3 @@ def get_png_dimensions(filename):
     except Exception as e:
         print(f"ERROR llegint dimensions de {filename}: {e}")
         return (None, None)
-
-
