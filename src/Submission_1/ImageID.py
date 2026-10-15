@@ -43,6 +43,13 @@ class ImageID:
     def generate_uuid(self, file: str) -> str:
         # Creem el UUID amb la funció obligatòria de l'enunciat
         new_uuid = str(cfg.get_uuid(file))
+        file = cfg.get_canonical_pathfile(file)
+
+        if file in self.file_to_uuid:
+            print(f"AVÍS: El fitxer '{file}' ja té un UUID.")
+            return None
+
+        new_uuid = str(cfg.get_uuid(file))
         
         # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file
         if new_uuid in self.uuid_to_file:
@@ -57,6 +64,7 @@ class ImageID:
 
     def get_uuid(self, file: str) -> str:
         # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
+        file = cfg.get_canonical_pathfile(file)
         return self.file_to_uuid.get(file)
 
     def remove_uuid(self, uuid: str):
