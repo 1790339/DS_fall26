@@ -33,23 +33,15 @@ Notes:
 """
 import cfg as cfg
 
-import sys, linecache
-
-def _tracer(frame, event, arg):
-    if event == 'exception' and arg[0] is TypeError:
-        fn, ln = frame.f_code.co_filename, frame.f_lineno
-        print(f"[TRACE] {fn}:{ln} -> {linecache.getline(fn, ln).strip()}")
-        print(f"[TRACE] mensaje: {arg[1]}")
-    return _tracer
-
-sys.settrace(_tracer)
-
 class ImageID:
     def __init__(self):
         # Dos diccionaris (taules hash) per garantir cerques O(1) en ambdues direccions.
         # file_to_uuid busca per path. uuid_to_file busca per UUID (claus i valors invertits).
         self.file_to_uuid = {}
         self.uuid_to_file = {}
+
+    def __len__(self) -> int:
+        return len(self.uuid_to_file)
 
     def generate_uuid(self, file: str) -> str:   
         # Creem el UUID amb la funció obligatòria de l'enunciat         
