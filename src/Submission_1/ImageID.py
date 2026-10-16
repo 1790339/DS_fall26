@@ -40,33 +40,30 @@ class ImageID:
         self.file_to_uuid = {}
         self.uuid_to_file = {}
 
-    def generate_uuid(self, file: str) -> str:
+    def generate_uuid(self, file: str) -> str:   
+        # Creem el UUID amb la funció obligatòria de l'enunciat         
+        file = str(file)         
+        new_uuid = str(cfg.get_uuid(file))                  
 
-        print("[DEBUG] generate_uuid recibe:", type(file), repr(file))
-        file = str(file)
-        try:
-            new_uuid = str(cfg.get_uuid(str(file)))
-        except Exception as e:
-            print("[DEBUG] cfg.get_uuid falla:", type(e).__name__, e)
-            raise
-        
-        # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file
-        if new_uuid in self.uuid_to_file:
-            print(f"AVÍS: L'ID {new_uuid} del fitxer '{file}' ja existeix. S'ignora.")
-            return None
+        # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file         
+        if new_uuid in self.uuid_to_file:             
+            print(f"AVÍS: L'ID {new_uuid} del fitxer '{file}' ja existeix. S'ignora.")             
+            return None                      
             
-        # Guardem la relació en els dos sentits per mantenir-ho sincronitzat
-        self.file_to_uuid[file] = new_uuid
-        self.uuid_to_file[new_uuid] = file
-        
+        # Guardem la relació en els dos sentits per mantenir-ho sincronitzat         
+        self.file_to_uuid[file] = new_uuid         
+        self.uuid_to_file[new_uuid] = file                  
         return new_uuid
 
     def get_uuid(self, file: str) -> str:
         # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
         return self.file_to_uuid.get(str(file))
 
-    def remove_uuid(self, uuid: str) -> None:
-        uuid = str(uuid)                      # evita objectes no-hashables 
+    def remove_uuid(self, *args, **kwargs):
+        print("[DEBUG] remove_uuid recibe:", args, kwargs)
+        uuid = str(args[0]) if args else None
+        if uuid is None:
+            return
         file = self.uuid_to_file.pop(uuid, None)
         if file is not None:
             self.file_to_uuid.pop(file, None)
