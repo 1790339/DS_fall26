@@ -68,6 +68,9 @@ class ImageData:
         # Això garanteix accessos i modificacions en temps O(1).
         self.db = {}
 
+    def __len__(self) -> int:
+        return len(self.db)
+
     def add_image(self, uuid: str, file: str):
         # Creem l'entrada amb tots els camps per defecte a "None"
         # Com que no llegim el disc encara, aquesta funció s'executa a l'instant
