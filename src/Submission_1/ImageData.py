@@ -155,3 +155,6 @@ class ImageData:
 
     def get_dimensions(self, uuid: str) -> tuple:
         return self.db.get(uuid, {}).get('dimensions', (0, 0))
+
+    def get_filename(self, uuid: str) -> str:
+        return self.db.get(uuid, {}).get('file', 'None')
