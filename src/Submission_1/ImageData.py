@@ -83,14 +83,14 @@ class ImageData:
         # Com que no llegim el disc encara, aquesta funció s'executa a l'instant
         self.db[uuid] = {
             'file': file,
-            'prompt': 'None',
-            'seed': 'None',
-            'cfg_scale': 'None',
-            'steps': 'None',
-            'sampler': 'None',
-            'model': 'None',
-            'generated': 'None',
-            'created_date': 'None',
+            'prompt': None,
+            'seed': None,
+            'cfg_scale': None,
+            'steps': None,
+            'sampler': None,
+            'model': None,
+            'generated': None,
+            'created_date': None,
             'dimensions': (0, 0)
         }
 
