@@ -60,7 +60,14 @@ Notes:
 import os
 import cfg as cfg
 from PIL import Image
-
+#TEMPORAL
+_t = os.path.join(os.path.dirname(os.path.abspath(__file__)), "main_test_first_deliver.py")
+if os.path.isfile(_t):
+    _L = open(_t, encoding="utf-8", errors="ignore").readlines()
+    for _n in range(836, 900):
+        print(f"[TESTSRC] {_n}: {_L[_n-1].rstrip()}")
+else:
+    print("[LS]", os.listdir(os.path.dirname(os.path.abspath(__file__))))
 class ImageData:
     def __init__(self):
         # Diccionari principal per emmagatzemar totes les dades.
