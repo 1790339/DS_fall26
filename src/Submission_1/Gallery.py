@@ -66,6 +66,9 @@ class Gallery:
         # Substituïm la llista estàndard per una cua de doble final (Doubly Linked List)
         self.image_uuids = deque()
 
+    def __len__(self) -> int:
+        return len(self.gestor_ids)
+
     
 def load_file(self, file: str):
     if not os.path.isfile(file):
