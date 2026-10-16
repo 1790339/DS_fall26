@@ -50,12 +50,15 @@ from PIL import Image
 
 class ImageViewer:
     def __init__(self, gestor_ids, gestor_dades):
-        # Guardem les referències als gestors per poder consultar
-        # les rutes i les metadades directament des de la memòria.
+        # Guardem les referències als gestors per poder consultar les rutes i les metadades directament des de la memòria.
         self.gestor_ids = gestor_ids
         self.gestor_dades = gestor_dades
 
     def print_image(self, uuid: str):
+        if uuid not in self.gestor_ids.uuid_to_file: #Comprovem que l'uuid esta al diccionari
+            print(f"Error: UUID {uuid} no registrat.")
+            return
+        
         # Comprovem si les dades encara estan buides avaluant un camp clau
         if self.gestor_dades.get_prompt(uuid) == None:
             self.gestor_dades.load_metadata(uuid)
