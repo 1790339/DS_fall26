@@ -41,9 +41,14 @@ class ImageID:
         self.uuid_to_file = {}
 
     def generate_uuid(self, file: str) -> str:
-        # Creem el UUID amb la funció obligatòria de l'enunciat
+
+        print("[DEBUG] generate_uuid recibe:", type(file), repr(file))
         file = str(file)
-        new_uuid = str(cfg.get_uuid(file))
+        try:
+            new_uuid = str(cfg.get_uuid(str(file)))
+        except Exception as e:
+            print("[DEBUG] cfg.get_uuid falla:", type(e).__name__, e)
+            raise
         
         # Comprovem col·lisions a l'instant gràcies a la taula hash de uuid_to_file
         if new_uuid in self.uuid_to_file:
