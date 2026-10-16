@@ -44,6 +44,9 @@ class ImageFiles:
 
     def reload_fs(self, path: str):
         print("[DEBUG] reload_fs path=", repr(path), "cwd=", os.getcwd()) #TEMPORAL
+        if path and os.path.isdir(path):
+            os.chdir(path)
+        
         new_files = set()
         
         for root, dirs, files in os.walk(path):
