@@ -43,6 +43,7 @@ class ImageFiles:
         self.last_removed = []
 
     def reload_fs(self, path: str):
+        print("[DEBUG] reload_fs path=", repr(path), "cwd=", os.getcwd()) #TEMPORAL
         new_files = set()
         
         for root, dirs, files in os.walk(path):
