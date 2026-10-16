@@ -32,6 +32,16 @@ Notes:
     - Un UUID només es pot generar una vegada (fins que s'elimini)
 """
 import cfg as cfg
+import sys, linecache
+
+def _tracer(frame, event, arg):
+    if event == 'exception' and arg[0] is TypeError:
+        fn, ln = frame.f_code.co_filename, frame.f_lineno
+        print(f"[TRACE] {fn}:{ln} -> {linecache.getline(fn, ln).strip()}")
+        print(f"[TRACE] mensaje: {arg[1]}")
+    return _tracer
+
+sys.settrace(_tracer)
 
 class ImageID:
     def __init__(self):
@@ -41,6 +51,7 @@ class ImageID:
         self.uuid_to_file = {}
 
     def __len__(self) -> int:
+        #Per consultar quants uuids tenim a la col·lecció
         return len(self.uuid_to_file)
 
     def generate_uuid(self, file: str) -> str:   
