@@ -29,7 +29,12 @@ Notes:
 """
 
 import os
-
+import  glob
+for _f in glob.glob(os.path.join(os.getcwd(), "main_test*.py")): #TEMPORAL
+    with open(_f, encoding="utf-8", errors="ignore") as _fh:
+        _lines = _fh.readlines()
+    for _n in range(335, 375):
+        print(f"[TESTSRC] {_n}: {_lines[_n-1].rstrip()}")
 class ImageFiles:
     def __init__(self):
         # guardem l'estat en un set per fer diferencies rapides O(N)
