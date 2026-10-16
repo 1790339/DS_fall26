@@ -84,7 +84,7 @@ class ImageData:
             'model': 'None',
             'generated': 'None',
             'created_date': 'None',
-            'dimensions': 'None'
+            'dimensions': (0, 0)
         }
 
     def remove_image(self, uuid: str):
@@ -112,18 +112,16 @@ class ImageData:
 
         try:
             with Image.open(path) as img:
-                text = getattr(img, 'text', {}) or {}
-                print("[DEBUG] claus PNG:", dict(text))   # temporal
-
+                metadata = img.text
                 self.db[uuid]['dimensions'] = (img.width, img.height)
-                self.db[uuid]['prompt'] = str(text.get('prompt', 'None'))
-                self.db[uuid]['seed'] = str(text.get('seed', 'None'))
-                self.db[uuid]['cfg_scale'] = str(text.get('cfg_scale', 'None'))
-                self.db[uuid]['steps'] = str(text.get('steps', 'None'))
-                self.db[uuid]['sampler'] = str(text.get('sampler', 'None'))
-                self.db[uuid]['model'] = str(text.get('model', 'None'))
-                self.db[uuid]['generated'] = str(text.get('generated', 'None'))
-                self.db[uuid]['created_date'] = str(text.get('created_date', 'None'))
+                self.db[uuid]['prompt'] = metadata.get('prompt', 'None')
+                self.db[uuid]['seed'] = metadata.get('seed', 'None')
+                self.db[uuid]['cfg_scale'] = metadata.get('cfg_scale', 'None')
+                self.db[uuid]['steps'] = metadata.get('steps', 'None')
+                self.db[uuid]['sampler'] = metadata.get('sampler', 'None')
+                self.db[uuid]['model'] = metadata.get('model', 'None')
+                self.db[uuid]['generated'] = metadata.get('generated', 'None')
+                self.db[uuid]['created_date'] = metadata.get('created_date', 'None')
         except Exception as e:
             print(f"Error llegint metadades de {rel_file}: {e}")
 
