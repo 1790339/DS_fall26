@@ -93,37 +93,38 @@ class ImageData:
         self.db.pop(uuid, None)
 
     def load_metadata(self, uuid: str):
-        # Si la imatge no està registrada, no fem res
         if uuid not in self.db:
             return
 
         rel_file = self.db[uuid]['file']
-        
-        # Per llegir l'arxiu físicament necessitem la ruta absoluta del disc,
-        # ja que internament només guardem la relativa.
-        abs_file = os.path.join(cfg.get_root(), rel_file)
 
-        if not os.path.isfile(abs_file):
-            print(f"AVÍS: L'arxiu {abs_file} no existeix al disc.")
+        candidates = [
+            rel_file,
+            os.path.join(cfg.get_root(), rel_file),
+            os.path.abspath(rel_file),
+        ]
+        path = next((p for p in candidates if os.path.isfile(p)), None)
+
+        if path is None:
+            print(f"AVÍS: L'arxiu {candidates[1]} no existeix al disc.")
+            print("[DEBUG] root:", cfg.get_root(), "| cwd:", os.getcwd())
             return
 
         try:
-            # Utilitzem la funció proporcionada per l'assignatura per llegir els chunks del PNG
-            metadata = Image.open(abs_file)
-            if metadata:
-                # Actualitzem el diccionari intern. 
-                # Fem servir .get() per mantenir "None" si la imatge no té algun camp
-                self.db[uuid]['prompt'] = metadata.get('Prompt', 'None')
-                self.db[uuid]['seed'] = metadata.get('Seed', 'None')
-                self.db[uuid]['cfg_scale'] = metadata.get('CFG_Scale', 'None')
-                self.db[uuid]['steps'] = metadata.get('Steps', 'None')
-                self.db[uuid]['sampler'] = metadata.get('Sampler', 'None')
-                self.db[uuid]['model'] = metadata.get('Model', 'None')
-                self.db[uuid]['generated'] = metadata.get('Generated', 'None')
-                self.db[uuid]['created_date'] = metadata.get('Created_Date', 'None')
-                
+            with Image.open(path) as img:
+                text = getattr(img, 'text', {}) or {}
+                print("[DEBUG] claus PNG:", dict(text))   # temporal
+
+                self.db[uuid]['dimensions'] = (img.width, img.height)
+                self.db[uuid]['prompt'] = str(text.get('prompt', 'None'))
+                self.db[uuid]['seed'] = str(text.get('seed', 'None'))
+                self.db[uuid]['cfg_scale'] = str(text.get('cfg_scale', 'None'))
+                self.db[uuid]['steps'] = str(text.get('steps', 'None'))
+                self.db[uuid]['sampler'] = str(text.get('sampler', 'None'))
+                self.db[uuid]['model'] = str(text.get('model', 'None'))
+                self.db[uuid]['generated'] = str(text.get('generated', 'None'))
+                self.db[uuid]['created_date'] = str(text.get('created_date', 'None'))
         except Exception as e:
-            # Si una imatge està corrupta, capturem l'error per evitar que el programa sencer peti
             print(f"Error llegint metadades de {rel_file}: {e}")
 
     # --- Getters amb temps de resposta O(1) ---
