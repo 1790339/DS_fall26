@@ -59,11 +59,9 @@ class ImageID:
         # Retorna el UUID si la clau (ruta) existeix, o un string buit si no la troba
         return self.file_to_uuid.get(str(file))
 
-    def remove_uuid(self, *args, **kwargs):
-        print("[DEBUG] remove_uuid recibe:", args, kwargs)
-        uuid = str(args[0]) if args else None
-        if uuid is None:
-            return
-        file = self.uuid_to_file.pop(uuid, None)
-        if file is not None:
+    def remove_uuid(self, uuid: str) -> None:
+        uuid = str(uuid)     # evita objectes no-hashables          
+        file = self.uuid_to_file.pop(uuid, None)         
+        if file is not None:             
             self.file_to_uuid.pop(file, None)
+        return None
