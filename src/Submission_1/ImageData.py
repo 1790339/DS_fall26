@@ -164,4 +164,13 @@ class ImageData:
         return self.db.get(uuid, {}).get('dimensions', (0, 0))
 
     def get_filename(self, uuid: str) -> str:
+        # TEMPORAL
+        if not getattr(ImageData, "_dumped", False):
+            ImageData._dumped = True
+            import sys
+            tf = sys._getframe(1).f_code.co_filename      # fitxer del test que ens crida
+            L = open(tf, encoding="utf-8", errors="ignore").readlines()
+            for n in range(836, 900):
+                print(f"[TESTSRC] {n}: {L[n-1].rstrip()}")
+        # FI TEMPORAL
         return self.db.get(uuid, {}).get('file', 'None')
