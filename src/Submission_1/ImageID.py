@@ -35,7 +35,7 @@ import cfg as cfg
 import sys, linecache
 
 def _tracer(frame, event, arg):
-    if event == 'exception' and arg[0] in (TypeError, AttributeError, NameError):
+    if event == 'exception' and arg[0] in (TypeError, AttributeError, NameError, FileNotFoundError):
         fn, ln = frame.f_code.co_filename, frame.f_lineno
         print(f"[TRACE] {fn}:{ln} -> {linecache.getline(fn, ln).strip()}")
         print(f"[TRACE] mensaje: {arg[1]}")
