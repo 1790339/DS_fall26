@@ -79,6 +79,9 @@ class ImageData:
         return len(self.db)
 
     def add_image(self, uuid: str, file: str):
+        if not uuid or not file:
+            return
+        
         # Creem l'entrada amb tots els camps per defecte a "None"
         # Com que no llegim el disc encara, aquesta funció s'executa a l'instant
         self.db[uuid] = {
@@ -112,10 +115,8 @@ class ImageData:
         ]
         path = next((p for p in candidates if os.path.isfile(p)), None)
 
-        if path is None:
-            print(f"AVÍS: L'arxiu {candidates[1]} no existeix al disc.")
-            print("[DEBUG] root:", cfg.get_root(), "| cwd:", os.getcwd())
-            return
+        if path is None: #Llançem un error si no existeix un path
+            raise FileNotFoundError(f"AVÍS: L'arxiu {rel_file} no existeix al disc.") 
 
         try:
             with Image.open(path) as img:
