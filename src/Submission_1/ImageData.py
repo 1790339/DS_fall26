@@ -83,15 +83,15 @@ class ImageData:
         # Com que no llegim el disc encara, aquesta funció s'executa a l'instant
         self.db[uuid] = {
             'file': file,
-            'prompt': 'None',
-            'seed': 'None',
-            'cfg_scale': 'None',
-            'steps': 'None',
-            'sampler': 'None',
-            'model': 'None',
-            'generated': 'None',
-            'created_date': 'None',
-            'dimensions': (0, 0)
+            'prompt': None,
+            'seed': None,
+            'cfg_scale': None,
+            'steps': None,
+            'sampler': None,
+            'model': None,
+            'generated': None,
+            'created_date': None,
+            'dimensions': None
         }
 
     def remove_image(self, uuid: str):
@@ -135,6 +135,11 @@ class ImageData:
     # --- Getters amb temps de resposta O(1) ---
     # Fem servir un encadenament de .get() per evitar excepcions KeyError
     # si per algun motiu l'UUID no existís al diccionari.
+    def _get(self, uuid, field):
+        entry = self.db.get(uuid) #Retorna None els atributs si l'uuid no existeix
+        if entry == None:
+            return None
+        return entry[field]
 
     def get_prompt(self, uuid: str) -> str:
         return self.db.get(uuid, {}).get('prompt', 'None')
