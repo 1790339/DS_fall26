@@ -135,38 +135,38 @@ class ImageData:
     # --- Getters amb temps de resposta O(1) ---
     # Fem servir un encadenament de .get() per evitar excepcions KeyError
     # si per algun motiu l'UUID no existís al diccionari.
-    def _get(self, uuid, field):
-        entry = self.db.get(uuid) #Retorna None els atributs si l'uuid no existeix
-        if entry == None:
-            return None
-        return entry[field]
+    def _get(self, uuid, camp):
+        entrada = self.db.get(uuid) #Busca l'entrada d'un uuid en el diccionari db
+        if entrada == None:
+            return None #Retorna None els atributs si l'uuid no existeix
+        return entrada[camp] 
 
     def get_prompt(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('prompt', 'None')
+        return self._get(uuid, 'prompt')
 
     def get_model(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('model', 'None')
+        return self._get(uuid, 'model')
 
     def get_seed(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('seed', 'None')
+        return self._get(uuid, 'seed')
 
     def get_cfg_scale(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('cfg_scale', 'None')
+        return self._get(uuid, 'cfg_scale')
 
     def get_steps(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('steps', 'None')
+        return self._get(uuid, 'steps')
 
     def get_sampler(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('sampler', 'None')
+        return self._get(uuid, 'sampler')
 
     def get_generated(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('generated', 'None')
+        return self._get(uuid, 'generated')
 
     def get_created_date(self, uuid: str) -> str:
-        return self.db.get(uuid, {}).get('created_date', 'None')
+        return self._get(uuid, 'created_date')
 
     def get_dimensions(self, uuid: str) -> tuple:
-        return self.db.get(uuid, {}).get('dimensions', (0, 0))
+        return self._get(uuid, 'dimensions')
 
     def get_filename(self, uuid: str) -> str:
         # TEMPORAL
@@ -178,4 +178,4 @@ class ImageData:
             for n in range(836, 900):
                 print(f"[TESTSRC] {n}: {L[n-1].rstrip()}")
         # FI TEMPORAL
-        return self.db.get(uuid, {}).get('file', 'None')
+        return self._get(uuid, 'file') 
