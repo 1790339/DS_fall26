@@ -132,50 +132,49 @@ class ImageData:
         except Exception as e:
             print(f"Error llegint metadades de {rel_file}: {e}")
 
-    # --- Getters amb temps de resposta O(1) ---
-    # Fem servir un encadenament de .get() per evitar excepcions KeyError
-    # si per algun motiu l'UUID no existís al diccionari.
+    # Getters amb temps de resposta O(1) ja que, a partir d'una clau uuid, accedim als seus camps
+
     def _get(self, uuid, camp):
         entrada = self.db.get(uuid) #Busca l'entrada d'un uuid en el diccionari db
         if entrada == None:
             return None #Retorna None els atributs si l'uuid no existeix
         return entrada[camp] 
 
-    def get_prompt(self, uuid: str) -> str:
+    def get_prompt(self, uuid: str) -> str: #Retorna camp prompt
         return self._get(uuid, 'prompt')
 
-    def get_model(self, uuid: str) -> str:
+    def get_model(self, uuid: str) -> str: #Retorna camp model
         return self._get(uuid, 'model')
 
-    def get_seed(self, uuid: str) -> str:
+    def get_seed(self, uuid: str) -> str: #Retorna camp seed
         return self._get(uuid, 'seed')
 
-    def get_cfg_scale(self, uuid: str) -> str:
+    def get_cfg_scale(self, uuid: str) -> str: #Retorna camp cfg_scale
         return self._get(uuid, 'cfg_scale')
 
-    def get_steps(self, uuid: str) -> str:
+    def get_steps(self, uuid: str) -> str: #Retorna camp steps
         return self._get(uuid, 'steps')
 
-    def get_sampler(self, uuid: str) -> str:
+    def get_sampler(self, uuid: str) -> str: #Retorna camp sampler
         return self._get(uuid, 'sampler')
 
-    def get_generated(self, uuid: str) -> str:
+    def get_generated(self, uuid: str) -> str: #Retorna camp generated
         return self._get(uuid, 'generated')
 
-    def get_created_date(self, uuid: str) -> str:
+    def get_created_date(self, uuid: str) -> str: #Retorna camp created_date
         return self._get(uuid, 'created_date')
 
-    def get_dimensions(self, uuid: str) -> tuple:
+    def get_dimensions(self, uuid: str) -> tuple: #retorna dimensions
         return self._get(uuid, 'dimensions')
 
-    def get_filename(self, uuid: str) -> str:
+    def get_filename(self, uuid: str) -> str: #Retorna el nom 
         # TEMPORAL
         if not getattr(ImageData, "_dumped", False):
             ImageData._dumped = True
             import sys
             tf = sys._getframe(1).f_code.co_filename      # fitxer del test que ens crida
             L = open(tf, encoding="utf-8", errors="ignore").readlines()
-            for n in range(836, 900):
+            for n in range(900, 1100):
                 print(f"[TESTSRC] {n}: {L[n-1].rstrip()}")
         # FI TEMPORAL
         return self._get(uuid, 'file') 
