@@ -68,13 +68,13 @@ class SearchMetadata:
         # Iterem sobre tots els UUIDs registrats a la memòria O(N)
         for uuid in self.gestor_dades.db.keys():
             # Forcem la càrrega de metadades des del disc si encara no s'ha fet
-            if self.gestor_dades.get_prompt(uuid) == 'None':
+            if self.gestor_dades.get_prompt(uuid) == None:
                 self.gestor_dades.load_metadata(uuid)
                 
             valor = getter_func(uuid)
             
             # Comprovem si la subcadena existeix dins del valor
-            if valor != 'None' and sub_net in str(valor).lower():
+            if valor != None and sub_net in str(valor).lower():
                 resultats.append(uuid)
                 
         return resultats
