@@ -114,7 +114,7 @@ class ImageData:
                 self.db[uuid]['dimensions'] = (img.width, img.height)
                 self.db[uuid]['prompt'] = metadata.get('Prompt', 'None')
                 self.db[uuid]['seed'] = metadata.get('Seed', 'None')
-                self.db[uuid]['cfg_scale'] = metadata.get('Cfg_Scale', 'None')
+                self.db[uuid]['cfg_scale'] = metadata.get('CFG_Scale', 'None')
                 self.db[uuid]['steps'] = metadata.get('Steps', 'None')
                 self.db[uuid]['sampler'] = metadata.get('Sampler', 'None')
                 self.db[uuid]['model'] = metadata.get('Model', 'None')
