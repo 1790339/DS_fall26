@@ -110,7 +110,7 @@ class ImageData:
         try:
             with Image.open(path) as img:
                 metadata = img.text
-                print("[CLAUS]", dict(text))   # TEMPORAL: borrar al confirmar las claves
+                print("[CLAUS]", dict(metadata))   # TEMPORAL: borrar al confirmar las claves
                 self.db[uuid]['dimensions'] = (img.width, img.height)
                 self.db[uuid]['prompt'] = metadata.get('prompt', 'None')
                 self.db[uuid]['seed'] = metadata.get('seed', 'None')
