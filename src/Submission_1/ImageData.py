@@ -130,6 +130,8 @@ class ImageData:
                 self.db[uuid]['model'] = metadata.get('model', 'None')
                 self.db[uuid]['generated'] = metadata.get('generated', 'None')
                 self.db[uuid]['created_date'] = metadata.get('created_date', 'None')
+        except OSError:
+            raise
         except Exception as e:
             print(f"Error llegint metadades de {rel_file}: {e}")
 
