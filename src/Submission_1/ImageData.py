@@ -112,14 +112,14 @@ class ImageData:
                 metadata = img.text
                 print("[CLAUS]", dict(metadata))   # TEMPORAL: borrar al confirmar las claves
                 self.db[uuid]['dimensions'] = (img.width, img.height)
-                self.db[uuid]['prompt'] = metadata.get('prompt', 'None')
-                self.db[uuid]['seed'] = metadata.get('seed', 'None')
-                self.db[uuid]['cfg_scale'] = metadata.get('cfg_scale', 'None')
-                self.db[uuid]['steps'] = metadata.get('steps', 'None')
-                self.db[uuid]['sampler'] = metadata.get('sampler', 'None')
-                self.db[uuid]['model'] = metadata.get('model', 'None')
-                self.db[uuid]['generated'] = metadata.get('generated', 'None')
-                self.db[uuid]['created_date'] = metadata.get('created_date', 'None')
+                self.db[uuid]['prompt'] = metadata.get('Prompt', 'None')
+                self.db[uuid]['seed'] = metadata.get('Seed', 'None')
+                self.db[uuid]['cfg_scale'] = metadata.get('Cfg_Scale', 'None')
+                self.db[uuid]['steps'] = metadata.get('Steps', 'None')
+                self.db[uuid]['sampler'] = metadata.get('Sampler', 'None')
+                self.db[uuid]['model'] = metadata.get('Model', 'None')
+                self.db[uuid]['generated'] = metadata.get('Generated', 'None')
+                self.db[uuid]['created_date'] = metadata.get('Created_Date', 'None')
         except OSError:
             raise
         except Exception as e:
