@@ -37,9 +37,7 @@ class ImageFiles:
         self.last_added = []
         self.last_removed = []
 
-    def reload_fs(self, path: str):
-        if path and os.path.isdir(path):
-            os.chdir(path)          
+    def reload_fs(self, path: str):          
         
         new_files = set()
         
@@ -49,10 +47,8 @@ class ImageFiles:
                     full_path = os.path.join(root, file)
                     rel_path = os.path.relpath(full_path)
                     
-                    # unifiquem separadors segons el guio
-                    rel_path = rel_path.replace(os.sep, '/')
-                    
-                    new_files.add(rel_path)
+                    # unifiquem separadors segons el guio i afegim al set                   
+                    new_files.add(rel_path.replace(os.sep, '/'))
         
         # calculem els canvis respecte a l'ultima lectura
         self.last_added = list(new_files - self.current_files)
