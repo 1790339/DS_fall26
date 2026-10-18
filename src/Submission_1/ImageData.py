@@ -101,7 +101,7 @@ class ImageData:
 
         rel_file = self.db[uuid]['file']
 
-        candidates = [rel_file, os.path.abspath(rel_file),]
+        candidates = [rel_file, os.path.join(cfg.get_root(), rel_file), os.path.abspath(rel_file),]
         path = next((p for p in candidates if os.path.isfile(p)), None)
 
         if path is None: #Llançem un error si no existeix un path
