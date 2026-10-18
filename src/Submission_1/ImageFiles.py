@@ -47,7 +47,7 @@ class ImageFiles:
             for file in files:
                 if file.lower().endswith('.png'):
                     full_path = os.path.join(root, file)
-                    rel_path = os.path.relpath(full_path, path)
+                    rel_path = os.path.relpath(full_path)
                     
                     # unifiquem separadors segons el guio
                     rel_path = rel_path.replace(os.sep, '/')
