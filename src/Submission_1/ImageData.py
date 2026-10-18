@@ -60,14 +60,7 @@ Notes:
 import os
 import cfg as cfg
 from PIL import Image
-#TEMPORAL
-_t = os.path.join(os.path.dirname(os.path.abspath(__file__)), "main_test_first_deliver.py")
-if os.path.isfile(_t):
-    _L = open(_t, encoding="utf-8", errors="ignore").readlines()
-    for _n in range(836, 900):
-        print(f"[TESTSRC] {_n}: {_L[_n-1].rstrip()}")
-else:
-    print("[LS]", os.listdir(os.path.dirname(os.path.abspath(__file__))))
+
 class ImageData:
     def __init__(self):
         # Diccionari principal per emmagatzemar totes les dades.
@@ -108,11 +101,7 @@ class ImageData:
 
         rel_file = self.db[uuid]['file']
 
-        candidates = [
-            rel_file,
-            os.path.join(cfg.get_root(), rel_file),
-            os.path.abspath(rel_file),
-        ]
+        candidates = [rel_file, os.path.abspath(rel_file),]
         path = next((p for p in candidates if os.path.isfile(p)), None)
 
         if path is None: #Llançem un error si no existeix un path
@@ -121,6 +110,7 @@ class ImageData:
         try:
             with Image.open(path) as img:
                 metadata = img.text
+                print("[CLAUS]", dict(text))   # TEMPORAL: borrar al confirmar las claves
                 self.db[uuid]['dimensions'] = (img.width, img.height)
                 self.db[uuid]['prompt'] = metadata.get('prompt', 'None')
                 self.db[uuid]['seed'] = metadata.get('seed', 'None')
@@ -171,13 +161,4 @@ class ImageData:
         return self._get(uuid, 'dimensions')
 
     def get_filename(self, uuid: str) -> str: #Retorna el nom 
-        # TEMPORAL
-        if not getattr(ImageData, "_dumped", False):
-            ImageData._dumped = True
-            import sys
-            tf = sys._getframe(1).f_code.co_filename      # fitxer del test que ens crida
-            L = open(tf, encoding="utf-8", errors="ignore").readlines()
-            for n in range(900, 1100):
-                print(f"[TESTSRC] {n}: {L[n-1].rstrip()}")
-        # FI TEMPORAL
         return self._get(uuid, 'file') 
