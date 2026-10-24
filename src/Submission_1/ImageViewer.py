@@ -49,19 +49,22 @@ import os
 from PIL import Image
 
 class ImageViewer:
-    def __init__(self, gestor_ids, gestor_dades):
+    def __init__(self, dades_imatge):
         # Guardem les referències als gestors per poder consultar les rutes i les metadades directament des de la memòria.
-        self.gestor_ids = gestor_ids
-        self.gestor_dades = gestor_dades
+        self.image_data = dades_imatge
 
     def print_image(self, uuid: str):
-        if uuid not in self.gestor_ids.uuid_to_file: #Comprovem que l'uuid esta al diccionari
-            print(f"Error: UUID {uuid} no registrat.")
+        file = self.image_data.get_filename(uuid) #Comprovem que l'uuid esta al diccionari
+        if file == None:
+            print(f"Error: UUID {uuid} no registrat")
             return
-        
-        # Comprovem si les dades encara estan buides avaluant un camp clau
-        if self.gestor_dades.get_prompt(uuid) == None:
-            self.gestor_dades.load_metadata(uuid)
+
+        # Si encara no s'han llegit les metadades, les carreguem
+        if self.image_data.get_prompt(uuid) is None:
+            try:
+                self.image_data.load_metadata(uuid)
+            except OSError as e:
+                print(f"Error: {e}")
             
         print(f"\n--- Metadades de la imatge ---")
         print(f" UUID:      {uuid}")
@@ -91,7 +94,7 @@ class ImageViewer:
 
     def show_image(self, uuid: str, mode: int):
         # Recuperem la ruta relativa a partir de l'UUID consultant el diccionari O(1)
-        file = self.gestor_ids.uuid_to_file.get(uuid)
+        file = self.image_data.get_filename(uuid)
         
         if not file:
             print(f"Error: L'identificador {uuid} no està registrat al sistema.")
