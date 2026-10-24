@@ -66,16 +66,18 @@ class ImageViewer:
             except OSError as e:
                 print(f"Error: {e}")
             
-        print(f"\n--- Metadades de la imatge ---")
-        print(f" UUID:      {uuid}")
-        print(f" Prompt:    {self.gestor_dades.get_prompt(uuid)[:90]}...")
-        print(f" Model:     {self.gestor_dades.get_model(uuid)}")
-        print(f" CFG Scale: {self.gestor_dades.get_cfg_scale(uuid)}")
-        print(f" Steps:     {self.gestor_dades.get_steps(uuid)}")
-        print(f" Seed:      {self.gestor_dades.get_seed(uuid)}")
-        print(f" Sampler:   {self.gestor_dades.get_sampler(uuid)}")
-        print(f" Generated: {self.gestor_dades.get_generated(uuid)}")
-        print(f" Data:      {self.gestor_dades.get_created_date(uuid)}")
+        print("\n--- Metadades de la imatge ---")
+        print(f" UUID:       {uuid}")
+        print(f" Path:       {file}")
+        print(f" Dimensions: {self.image_data.get_dimensions(uuid)}")
+        print(f" Prompt:     {self.image_data.get_prompt(uuid)}")
+        print(f" Model:      {self.image_data.get_model(uuid)}")
+        print(f" Seed:       {self.image_data.get_seed(uuid)}")
+        print(f" CFG Scale:  {self.image_data.get_cfg_scale(uuid)}")
+        print(f" Steps:      {self.image_data.get_steps(uuid)}")
+        print(f" Sampler:    {self.image_data.get_sampler(uuid)}")
+        print(f" Generated:  {self.image_data.get_generated(uuid)}")
+        print(f" Created:    {self.image_data.get_created_date(uuid)}")
         print("-" * 30)
 
     def show_file(self, file: str):
