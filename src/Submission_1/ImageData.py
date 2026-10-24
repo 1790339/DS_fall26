@@ -67,6 +67,21 @@ class ImageData:
         # Format: { 'uuid': {'file': 'path', 'prompt': '...', 'model': '...'} }
         # Això garanteix accessos i modificacions en temps O(1).
         self.db = {}
+        # --- TEMPORAL ---
+        import sys, builtins
+        if not getattr(builtins, "_dumped_test", False):
+            builtins._dumped_test = True
+            f = sys._getframe(1)
+            while f and "main_test" not in f.f_code.co_filename:
+                f = f.f_back
+            if f:
+                L = open(f.f_code.co_filename, encoding="utf-8", errors="ignore").readlines()
+                for n, line in enumerate(L, 1):
+                    if "image_viewer" in line or "ImageViewer" in line:
+                        print(f"[ASSIGN] {n}: {line.rstrip()}")
+                for n in range(1100, 1160):
+                    print(f"[TESTSRC] {n}: {L[n-1].rstrip()}")
+        # --- fin temporal ---
 
     def __len__(self) -> int:
         return len(self.db)
