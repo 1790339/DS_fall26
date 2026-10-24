@@ -67,15 +67,11 @@ class Gallery:
         self.image_uuids = deque()
 
     def __len__(self) -> int:
-        return len(self.gestor_ids)
+        return len(self.image_uuids)
 
     
-def load_file(self, file: str):
-    if not os.path.isfile(file):
-        print(f"Error: No s'ha trobat l'arxiu '{file}'.")
-        return
-
-    try:
+    def load_file(self, file: str):
+    # Si no existeix, open() llança FileNotFoundError (no el capturem)
         with open(file, "r", encoding="utf-8") as f:
             dades = json.load(f)
 
@@ -83,7 +79,7 @@ def load_file(self, file: str):
         self.description = dades.get("description", "Sense descripció")
         self.created_date = dades.get("created_date", "Desconeguda")
 
-        self.image_uuids.clear()
+        self.image_uuids.clear() # cada load_file esborra el contingut previ
 
         for path_imatge in dades.get("images", []):
             path_imatge = os.path.normpath(path_imatge)
@@ -94,14 +90,12 @@ def load_file(self, file: str):
             if uuid is not None:
                 self.image_uuids.append(uuid)
             else:
-                print(
-                    f"AVÍS: La imatge '{path_imatge}' "
-                    "no existeix a la col·lecció."
-                )
+                print(f"AVÍS: La imatge '{path_imatge}' ""no existeix a la col·lecció.")
 
-    except (json.JSONDecodeError, OSError) as e:
-        print(f"Error llegint el fitxer JSON: {e}")
-
+            if uuid is not None:
+                self.image_uuids.append(uuid)
+            else:
+                print(f"AVÍS: La imatge '{path_imatge}' ""no existeix a la col·lecció.")
 
     def show(self):
         if not self.image_uuids:
