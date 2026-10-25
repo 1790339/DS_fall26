@@ -69,7 +69,7 @@ class ImageData:
         self.db = {}
 
     def __len__(self) -> int:
-        return len(self.db)
+        return len(self.db) #Nombre d'imatges registrades
 
     def add_image(self, uuid: str, file: str):
         if not uuid or not file:
@@ -96,11 +96,12 @@ class ImageData:
         self.db.pop(uuid, None)
 
     def load_metadata(self, uuid: str):
-        if uuid not in self.db:
+        if uuid not in self.db: # Si la imatge no està registrada, no fem res.
             return
 
         rel_file = self.db[uuid]['file']
 
+        # Provem la ruta tal qual, combinada amb l'arrel i com a ruta absoluta.
         candidates = [rel_file, os.path.join(cfg.get_root(), rel_file), os.path.abspath(rel_file),]
         path = next((p for p in candidates if os.path.isfile(p)), None)
 
@@ -108,8 +109,10 @@ class ImageData:
             raise FileNotFoundError(f"AVÍS: L'arxiu {rel_file} no existeix al disc.") 
 
         try:
+            # Els camps estan embeguts al PNG com a chunks de text.
             with Image.open(path) as img:
                 metadata = img.text
+                # Si un camp no existeix al PNG, guardem el string "None".
                 self.db[uuid]['dimensions'] = (img.width, img.height)
                 self.db[uuid]['prompt'] = metadata.get('Prompt', 'None')
                 self.db[uuid]['seed'] = metadata.get('Seed', 'None')
