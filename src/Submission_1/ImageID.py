@@ -32,16 +32,6 @@ Notes:
     - Un UUID només es pot generar una vegada (fins que s'elimini)
 """
 import cfg as cfg
-import sys, linecache
-
-def _tracer(frame, event, arg):
-    if event == 'exception' and arg[0] in (TypeError, AttributeError, NameError, FileNotFoundError):
-        fn, ln = frame.f_code.co_filename, frame.f_lineno
-        print(f"[TRACE] {fn}:{ln} -> {linecache.getline(fn, ln).strip()}")
-        print(f"[TRACE] mensaje: {arg[1]}")
-    return _tracer
-
-sys.settrace(_tracer)
 
 class ImageID:
     def __init__(self):
@@ -74,8 +64,8 @@ class ImageID:
         return self.file_to_uuid.get(str(file))
 
     def remove_uuid(self, uuid: str) -> None:
-        uuid = str(uuid)     # evita objectes no-hashables          
-        file = self.uuid_to_file.pop(uuid, None)         
+        uuid = str(uuid)     # Convertim a str per evitar errors amb tipus no hashables.          
+        file = self.uuid_to_file.pop(uuid, None)  # pop amb valor per defecte: no falla si l'UUID no existeix.    
         if file is not None:             
             self.file_to_uuid.pop(file, None)
         return None
