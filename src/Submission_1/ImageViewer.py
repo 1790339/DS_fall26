@@ -65,6 +65,18 @@ class ImageViewer:
                 self.image_data.load_metadata(uuid)
             except OSError as e:
                 print(f"Error: {e}")
+
+        # Truncar el prompt si és molt llarg.
+        prompt = str(self.image_data.get_prompt(uuid))
+        if len(prompt) > 90:
+            prompt = prompt[:90] + "..."
+
+        # Dimensions com "width x height".
+        dims = self.image_data.get_dimensions(uuid)
+        if dims is None:
+            dims_txt = "None"
+        else:
+            dims_txt = f"{dims[0]} x {dims[1]}"
             
         print("\n--- Metadades de la imatge ---")
         print(f" UUID:       {uuid}")
