@@ -103,6 +103,14 @@ class SearchMetadata:
     def date(self, sub: str) -> list:
         return self._cerca_generica(self.gestor_dades.get_created_date, sub)
 
+    def dimensions(self, width, height) -> list:
+        resultats = []
+        for uuid in list(self.gestor_dades.db.keys()):
+            self._asegurar_carrega_imatge(uuid)
+            if self.gestor_dades.get_dimensions(uuid) == (width, height):
+                resultats.append(uuid)
+        return resultats
+
     # --- Operadors Lògics O(N) utilitzant Taules Hash ---
 
     def and_operator(self, list1: list, list2: list) -> list:
