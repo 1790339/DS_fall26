@@ -59,23 +59,26 @@ class SearchMetadata:
         # Necessitem accés a la base de dades per consultar els valors
         self.gestor_dades = gestor_dades
 
+    def _asegurar_carrega_imatge(self, uuid):
+        if self.gestor_dades.get_prompt(uuid) is None: #Si no s'han carregat les metadades d'una imatge
+            try:
+                self.gestor_dades.load_metadata(uuid) #Les carreguem
+            except OSError:
+                pass
+
     def _cerca_generica(self, getter_func, sub: str) -> list:
         # Mètode privat que encapsula la lògica de cerca per no repetir codi.
         # getter_func és la funció que extreu la dada (ex: get_prompt)
         resultats = []
         sub_net = sub.lower() # Passem a minúscules per fer la cerca insensible a majúscules
-        
-        # Iterem sobre tots els UUIDs registrats a la memòria O(N)
-        for uuid in self.gestor_dades.db.keys():
+        for uuid in list(self.gestor_dades.db.keys()): # Iterem sobre tots els UUIDs registrats a la memòria O(N)
+            self._asegurar_carga(uuid)
+            valor = getter_func(uuid)
             # Forcem la càrrega de metadades des del disc si encara no s'ha fet
             if self.gestor_dades.get_prompt(uuid) == None:
                 self.gestor_dades.load_metadata(uuid)
-                
-            valor = getter_func(uuid)
-            
-            # Comprovem si la subcadena existeix dins del valor
-            if valor != None and sub_net in str(valor).lower():
-                resultats.append(uuid)
+                if valor != None and sub_net in str(valor).lower(): # Comprovem si la subcadena existeix dins del valor
+                    resultats.append(uuid)
                 
         return resultats
 
